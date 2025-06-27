@@ -63,3 +63,25 @@ Class.hasMany(AttendanceRecord, { foreignKey: "classId" });
 AttendanceRecord.belongsTo(Class, { foreignKey: "classId" });
 
 export { Class, Student, AttendanceRecord };
+async function insertSampleData() {
+  await sequelize.sync({ force: true }); // Recreates tables
+
+  const class1 = await Class.create({
+    name: "Web Development",
+    schedule: "Mon-Wed-Fri 10:00-12:00"
+  });
+
+  const student1 = await Student.create({
+    name: "HengZ",
+    classId: class1.id
+  });
+
+  await AttendanceRecord.create({
+    studentId: student1.id,
+    classId: class1.id,
+    date: "2025-06-17",
+    status: "Present"
+  });
+
+  console.log("Sample data inserted successfully");
+}

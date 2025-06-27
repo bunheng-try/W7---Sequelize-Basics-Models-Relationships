@@ -1,14 +1,24 @@
-import sequelize from "./db/database.js"; 
-import "./models/tables.js"; // Import the tables module
-// 👈 this line is critical
-import "./controllers/attendanceController.js"
+import express from "express";
+import sequelize from "./db/database.js";
+import "./models/att_tables.js";
+import attendanceRoutes from "./routes/attendanceRoutes.js";
 
-try {
-  // TODO - Call sequelize.sync()
- await sequelize.sync();
-  // TODO -  Print the result of the sync on console
- console.log("Database connected successfully!");
+const app = express();
+app.use(express.json());
 
-} catch (error) {
-  console.error("Unable to connect to the database:", error);
+app.use("/", attendanceRoutes);
+
+// Sync database and start server
+async function startServer() {
+  try {
+    await sequelize.sync();
+    console.log("Database synced successfully");
+
+    app.listen(3000, () => {
+      console.log("Server is running on http://localhost:3000");
+    });
+  } catch (err) {
+    console.error("Unable to connect to the database:", err.message);
+  }
 }
+startServer();
