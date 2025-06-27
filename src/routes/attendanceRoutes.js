@@ -6,21 +6,23 @@ import {
   getStudentSummary,
 } from "../controllers/attendanceController.js";
 
-const router = express.Router();
+const router = express.Router();  // <<--- THIS WAS MISSING
+
 router.post("/attendance", async (req, res) => {
+  console.log("req.body:", req.body); // debug body
   try {
     const { studentId, classId, date, status } = req.body;
-
     if (!studentId || !classId || !date) {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
-    const record = await markAttendance(studentId, classId, date, status || "Present");
+    const record = await markAttendance(studentId, classId, date, status);
     res.status(201).json(record);
   } catch (error) {
     res.status(500).json({ message: "Error marking attendance", error: error.message });
   }
 });
+
 router.get("/attendance", async (req, res) => {
   const { studentId, date } = req.query;
 
@@ -38,6 +40,7 @@ router.get("/attendance", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
 router.get("/classes/:id/attendance", async (req, res) => {
   const classId = req.params.id;
 
@@ -48,6 +51,7 @@ router.get("/classes/:id/attendance", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
 router.get("/students/:id/attendance", async (req, res) => {
   const studentId = req.params.id;
 
