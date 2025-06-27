@@ -1,6 +1,7 @@
 import sequelize from "./db/database.js"; 
 import "./models/tables.js"; // Import the tables module
 // 👈 this line is critical
+import "./controllers/attendanceController.js"
 
 try {
   // TODO - Call sequelize.sync()
